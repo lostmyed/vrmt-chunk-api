@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 from uuid import uuid4
 from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
+from dotenv import load_dotenv
+
+load_dotenv()  # Load .env if running locally
 
 # === Load API keys from environment ===
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
