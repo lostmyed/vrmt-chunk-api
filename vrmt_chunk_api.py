@@ -7,9 +7,9 @@ from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
 
 # === CONFIGURATION ===
-PINECONE_API_KEY = "pcsk_5J8JtJ_EnBSzd7pE2BSD9F8nLM5Vy6LbpN1t1KkacZjnQGb7ZNVt2yvvzhxo8RGEnu6HvR"
+PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 INDEX_NAME = "vrmt-docs"
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 # Initialize OpenAI and Pinecone
 openai = OpenAI(api_key=OPENAI_API_KEY)
