@@ -6,14 +6,15 @@ from uuid import uuid4
 from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
 
-# === CONFIGURATION ===
-PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
-INDEX_NAME = "vrmt-docs"
+# === Load API keys from environment ===
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 
-# Initialize OpenAI and Pinecone
+# === Initialize OpenAI and Pinecone clients ===
 openai = OpenAI(api_key=OPENAI_API_KEY)
 pc = Pinecone(api_key=PINECONE_API_KEY)
+
+INDEX_NAME = "vrmt-docs"
 if INDEX_NAME not in pc.list_indexes().names():
     pc.create_index(
         name=INDEX_NAME,
@@ -21,6 +22,7 @@ if INDEX_NAME not in pc.list_indexes().names():
         metric="cosine",
         spec=ServerlessSpec(cloud="aws", region="us-east-1")
     )
+
 index = pc.Index(INDEX_NAME)
 
 # === STEP 1: CHUNKING ===
