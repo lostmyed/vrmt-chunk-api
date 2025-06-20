@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: vrmt-chunk-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python vrmt_chunk_api.py
+    envVars:
+      - key: PINECONE_API_KEY
+        value: pcsk_5J8JtJ_EnBSzd7pE2BSD9F8nLM5Vy6LbpN1t1KkacZjnQGb7ZNVt2yvvzhxo8RGEnu6HvR
+      - key: OPENAI_API_KEY
+        value: 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
