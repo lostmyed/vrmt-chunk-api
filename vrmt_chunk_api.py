@@ -81,6 +81,19 @@ def embed_and_upload(chunks):
     index.upsert(vectors)
     return len(vectors)
 
+# === AUTO-CHUNK ON DEPLOY ===
+try:
+    md_path = "vr-system.md"
+    if os.path.exists(md_path):
+        chunks = load_chunks(md_path)
+        print(f"Loaded {len(chunks)} chunks. Uploading to Pinecone...")
+        count = embed_and_upload(chunks)
+        print(f"Uploaded {count} chunks.")
+    else:
+        print(f"Markdown file '{md_path}' not found, skipping chunking.")
+except Exception as e:
+    print(f"Auto-chunking failed: {e}")
+
 # === STEP 3: SEARCH ENDPOINT ===
 app = Flask(__name__)
 
@@ -99,10 +112,4 @@ def search():
     results = index.query(vector=embedding, top_k=5, include_metadata=True)
     return jsonify([match["metadata"] for match in results["matches"]])
 
-if __name__ == "__main__":
-    chunks = load_chunks("vr-system.md")
-    print(f"Loaded {len(chunks)} chunks. Uploading to Pinecone...")
-    count = embed_and_upload(chunks)
-    print(f"Uploaded {count} chunks.")
-    app.run(host="0.0.0.0", port=5000)
 
