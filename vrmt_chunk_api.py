@@ -101,4 +101,4 @@ if __name__ == "__main__":
     print(f"Loaded {len(chunks)} chunks. Uploading to Pinecone...")
     count = embed_and_upload(chunks)
     print(f"Uploaded {count} chunks.")
-    app.run(port=5000)
+    app.run(host="0.0.0.0", port=5000)
