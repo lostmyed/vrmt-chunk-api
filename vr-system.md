@@ -302,10 +302,26 @@ Enables glass delivery to an individual section.
 ---
 ## 8. Section Control Panel Button Positions
 
-- Only If the `section_control_panel_type` in machine state is listed below let the User know what buttons to press.
+- The user may be using different types of section control panels. The current panel in use is defined by the machine state value: `section_control_panel_type`.
+    
+- **Only provide button instructions for the control panel that matches the current value of `section_control_panel_type`.** Do not reference or describe any other control panels, even if they are listed below.
+    
+
+### Emhart Red 1
+
+_(Use only if `section_control_panel_type` = `"Emhart Red 1"`)_
+
+- **Start Section:** Press the 2 green start buttons located bottom left and bottom right.
+    
+- **Turn Gob On/Off:** Press the yellow button on the bottom row of buttons.
+    
+
 ### Emhart Red 2
-- (machine state: `section_control_panel_type = "Emhart Red 2"`)
-- Start Section: User needs to press the 2 green start buttons located bottom left and bottom right.
-- Turn Gob On/Off: User needs to press the yellow button positioned on the bottom row of buttons.
+
+_(Use only if `section_control_panel_type` = `"Emhart Red 2"`)_
+
+- **Start Section:** Press the 2 green start buttons located bottom left and bottom right.
+    
+- **Turn Gob On/Off:** Press the yellow button on the bottom row of buttons.
 
 *End of document.*
