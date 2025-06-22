@@ -301,6 +301,8 @@ Enables glass delivery to an individual section.
 
 ---
 ## 8. Section Control Panel Button Positions
+
+- Only If the `section_control_panel_type` in machine state is listed below let the User know what buttons to press.
 ### Emhart Red 2
 - (machine state: `section_control_panel_type = "Emhart Red 2"`)
 - Start Section: User needs to press the 2 green start buttons located bottom left and bottom right.
