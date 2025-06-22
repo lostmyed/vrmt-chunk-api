@@ -1,6 +1,6 @@
 # VR Training System Overview
 
-This document describes how users interact with the VR training environment for glass bottle manufacturing, what actions are available, and how lessons are structured.
+This document describes how users interact with the VR training environment for glass bottle manufacturing, what actions are available, and how lessons are structured..
 
 ---
 
