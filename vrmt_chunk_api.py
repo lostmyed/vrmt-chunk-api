@@ -56,6 +56,9 @@ def load_chunks(md_file):
 
 # === STEP 2: EMBED & UPSERT ===
 def embed_and_upload(chunks):
+    # Clear all existing vectors from the index to avoid duplicates
+    index.delete(delete_all=True)
+
     vectors = []
     for chunk in chunks:
         text = chunk["text"]
@@ -102,3 +105,4 @@ if __name__ == "__main__":
     count = embed_and_upload(chunks)
     print(f"Uploaded {count} chunks.")
     app.run(host="0.0.0.0", port=5000)
+
