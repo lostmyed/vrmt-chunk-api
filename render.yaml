@@ -3,7 +3,7 @@ services:
     name: vrmt-chunk-api
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python vrmt_chunk_api.py
+    startCommand: gunicorn vrmt_chunk_api:app
     envVars:
       - key: PINECONE_API_KEY
         value: pcsk_5J8JtJ_EnBSzd7pE2BSD9F8nLM5Vy6LbpN1t1KkacZjnQGb7ZNVt2yvvzhxo8RGEnu6HvR
