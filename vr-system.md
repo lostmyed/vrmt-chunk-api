@@ -300,8 +300,9 @@ Enables glass delivery to an individual section.
 - The `Bottle Tester` will show the User all Faults that are on this bottle via the Bottle Tester Control Panel.
 
 ---
-## 8. Section Control Panels `Section Control Panel` (machine state: `section_control_panel_type`)
+## 8. Section Control Panel Button Positions
 ### Emhart Red 2
+- (machine state: `section_control_panel_type = "Emhart Red 2"`)
 - Start Section: User needs to press the 2 green start buttons located bottom left and bottom right.
 - Turn Gob On/Off: User needs to press the yellow button positioned on the bottom row of buttons.
 
