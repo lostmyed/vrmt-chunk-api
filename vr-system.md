@@ -217,7 +217,7 @@ The tube must be raised to allow molten glass to stream from the feeder through 
 
 **Requirements:**
 - Feeder temperature must be at operational range.
-- Tube must be raised using the `Raise Tube` control. (machine state: `tube_height > 0`)
+- Tube must be raised via the feeder control panel. (machine state: `tube_height > 0`)
 
 **Effect:**
 - When raised, glass will begin streaming vertically toward the shear blades.
@@ -228,7 +228,7 @@ Oscillating mechanism that initialises the shape of the gob.
 
 **Requirements:**
 - Glass must be streaming (machine state: `tube_height > 0`)
-- Needles must be powered on (machine state: `needles_on = true`)
+- Needles must be activated via the needles control panel (machine state: `needles_on = true`)
 
 **Effect:**
 - Pushes the glass through the orifice to shape the gob.
@@ -239,7 +239,7 @@ The shears cut the continuous glass stream into gobs at regular intervals.
 
 **Requirements:**
 - Glass must be streaming (tube raised).
-- Shears must be active `shears on` (machine state: `shears_on = true`)
+- Shears must be active via the shears control panel (machine state: `shears_on = true`)
 
 **Effect:**
 - Gobs are formed from the molten glass stream and delivered toward the distributor.
@@ -250,7 +250,7 @@ Rotating mechanism that delivers formed gobs to available machine sections. It h
 
 **Requirements:**
 - Shears must be cutting gobs to allow the distributer to be in position `distributor positioned` 
-- Distributor must be powered on and positioned (machine state: `distributor_positioned = true` and  `distributor_enabled = true`).
+- Distributor must be powered on and positioned via the distributor control panel (machine state: `distributor_positioned = true` and  `distributor_enabled = true`).
 
 **Effect:**
 - When the requirements have been met `Gob Delvery` is **Active** or **On**
@@ -262,19 +262,21 @@ The delivery chutes guide the gobs into the section blank moulds.
 
 **Requirements:**
 - The gobs must be guided into the centre of the moulds.
+- If delivery needs adjusting the controls are on the individual sections on the `Blank Side`.
 
 **Effect:**
 - Incorrectly adjusted delivery chutes can cause damage to the gobs and in some cases enable the gob to land on top of the moulds and cause a fire.
 ### Section Start (Per Section)
 
 **Overview:**
-Each machine section must be `running` before it can receive gobs. 
+- Each machine section can be started individually.
+- Then sections are the machinery assemblies the form the bottles from the gobs. 
 
 **Requirements:**
-- No E-Stops engaged (machine state: `blank_estop_engaged = false` `blow_estop_engaged = false` `manifold_estop_engaged = false`)
+- No E-Stops are engaged for the section (machine state: `blank_estop_engaged = false` `blow_estop_engaged = false` `manifold_estop_engaged = false`)
+- Section must be activated via the section control panel.
 
 **Effect:**
-- When gobs are **On** for the sections it informs the distributer to feed it gobs.
 - Section is cycling or **Started**. (machine state: `running = true`)
 
 ### Gob On (Per Section)
@@ -283,7 +285,7 @@ Each machine section must be `running` before it can receive gobs.
 Enables glass delivery to an individual section.
 
 **Requirements:**
-- Section must be `running`. (machine state: `running = true`)
+- Section must be cycling or **Started**. (machine state: `running = true`)
 - `Gob Delivery` must be **Active**.
 
 **Effect:**
@@ -298,4 +300,3 @@ Enables glass delivery to an individual section.
 - The `Bottle Tester` will show the User all Faults that are on this bottle via the Bottle Tester Control Panel.
 
 *End of document.*
-
