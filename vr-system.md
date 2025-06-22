@@ -73,17 +73,17 @@ This document describes how users interact with the VR training environment for 
 - Fault notification indicator.
 - Increase and Decrease speed of the **`system simulation`**.
 #### Home Tab
-##### Section Tab
+##### Section Sub Tab
 -  General status of the sections.
 - Adjust cycle time for the sections: This increases or decreases the rate at what glass products are created.
 - "Section Through" toggle button (only available in the `Training Room`).
 - Adjust `Training Section` height (only available in the `Training Room`).
-##### Temperature Tab
+##### Temperature Sub Tab
 - This shows the temperature of components that have been checked via the `Temperature Gun`.
 - Toggle button to link this data to the gun so temperatures get sent to this page.
 - Toggle `mould cooling` visualisation.
 - Adjust time it takes for the moulds to reach full temperature in the **`system simulation`**.
-##### Fire Tab
+##### Fire Sub Tab
 - Shows the statues of the section fire.
 - Shows the status of the Air and Oil valves.
 - Adjust the effectiveness of the fire fighting equipment in the **`system simulation`**. 
@@ -291,12 +291,18 @@ Enables glass delivery to an individual section.
 **Effect:**
 - Section is now forming Bottles.
 ---
-## Bottle Fault Procedure
+## 7. Bottle Fault Procedure
 
 - Bottle faults are detected by equipment on the system conveyors, these pieces of equipment are shown in the VR app but are not interactable. They are there for reference only.
 - When a fault is detected by the system it is indicated on the `PDA` in the bottom menu. (Fault Detected)
 - The rejected bottles will get bypassed down the **Reject Conveyor**
 - The User must use the `Bottle Tongs` to place the bottle on the `Bottle Tester`
 - The `Bottle Tester` will show the User all Faults that are on this bottle via the Bottle Tester Control Panel.
+
+---
+## 8. Section Control Panels `Section Control Panel` (machine state: `section_control_panel_type`)
+### Emhart Red 2
+- Start Section: User needs to press the 2 green start buttons located bottom left and bottom right.
+- Turn Gob On/Off: User needs to press the yellow button positioned on the bottom row of buttons.
 
 *End of document.*
