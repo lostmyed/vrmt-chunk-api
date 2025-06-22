@@ -293,35 +293,64 @@ Enables glass delivery to an individual section.
 ---
 ## 7. Bottle Fault Procedure
 
-- Bottle faults are detected by equipment on the system conveyors, these pieces of equipment are shown in the VR app but are not interactable. They are there for reference only.
-- When a fault is detected by the system it is indicated on the `PDA` in the bottom menu. (Fault Detected)
-- The rejected bottles will get bypassed down the **Reject Conveyor**
-- The User must use the `Bottle Tongs` to place the bottle on the `Bottle Tester`
-- The `Bottle Tester` will show the User all Faults that are on this bottle via the Bottle Tester Control Panel.
+- Bottle faults are automatically detected by inspection equipment located along the system conveyors. These devices are visible in the VR environment but are **non-interactive** and provided for reference only.
+- When a fault is detected, it is indicated on the `PDA` located in the bottom menu, marked as **"Fault Detected"**.
+- Faulty bottles are automatically diverted onto the **Reject Conveyor**.
+- The user must then use the `Bottle Tongs` to manually transfer the rejected bottle onto the `Bottle Tester`.
+- The `Bottle Tester` will display all detected faults for that bottle through the **Bottle Tester Control Panel**.
 
 ---
 ## 8. Section Control Panel Button Positions
 
 - The user may be using different types of section control panels. The current panel in use is defined by the machine state value: `section_control_panel_type`.
-    
 - **Only provide button instructions for the control panel that matches the current value of `section_control_panel_type`.** Do not reference or describe any other control panels, even if they are listed below.
-    
+- The user's position is defined by `user_location`. If this is set to `"Blank Side"` or `"Blow Side"`, describe the corresponding control panel for that side:
+- If `user_location = "Blank Side"`, describe the **Blank Side Control Panel**.
+- If `user_location = "Blow Side"`, describe the **Blow Side Control Panel**.
+- If `user_location` is missing or does not match either of these values, **default to describing the Blank Side Control Panel**, and clearly inform the user that the instructions assume they are on the Blank Side.
 
 ### Emhart Red 1
 
 _(Use only if `section_control_panel_type` = `"Emhart Red 1"`)_
+#### Blank Side Control Panel
 
-- **Start Section:** Press the 2 green start buttons located bottom left and bottom right.
-    
+- **Start Section:** Press the 2 green start buttons simultaneously, located bottom left and bottom right.
 - **Turn Gob On/Off:** Press the yellow button on the bottom row of buttons.
-    
+- **Controlled Stops:**
+	- There are 2 controlled stop buttons on the panel, one stops the invert arm on the Blank Side, the other stops the invert arm on the Blow Side.
+	- **Controlled Stop** (Invert stops Blank Side): Press the red button on the bottom row forth from the right.
+	- **Controlled Stop** (Invert stops Blow Side): Press the red button on the bottom row sixth from the right.
+- **Swab:** Press the white button on the bottom row third from the right.
+- **Reject Bottle** (inside cavity): Press the black switch on the bottom row second from the left.
+- **Reject Bottle** (outside cavity): Press the black switch on the bottom row third from the left.
+- **E-Stop:** Press the large red button on the right of the panel.
+#### Blow Side Control Panel
 
+- **Start Section:** Press the 2 green start buttons simultaneously, located bottom row and top row.
+- **Turn Gob On/Off:** Press the yellow button on the top row of buttons.
+- **Controlled Stop:** Press the red button on the top row.
+- **Swab:** Press the white button on the top row forth from the right.
+- **E-Stop:** Press the large red button on the right of the panel.
 ### Emhart Red 2
 
 _(Use only if `section_control_panel_type` = `"Emhart Red 2"`)_
+#### Blank Side Control Panel
 
-- **Start Section:** Press the 2 green start buttons located bottom left and bottom right.
-    
+- **Start Section:** Press the 2 green start buttons simultaneously, located bottom left and bottom right.
 - **Turn Gob On/Off:** Press the yellow button on the bottom row of buttons.
+- **Controlled Stops:**
+	- There are 2 controlled stop buttons on the panel, one stops the invert arm on the Blank Side, the other stops the invert arm on the Blow Side.
+	- **Controlled Stop** (Invert stops Blank Side): Press the red button on the bottom row forth from the right.
+	- **Controlled Stop** (Invert stops Blow Side): Press the red button on the bottom row sixth from the right.
+- **Swab:** Press the white button on the bottom row third from the right.
+- **Reject Bottle** (inside cavity): Press the black switch on the bottom row second from the left.
+- **Reject Bottle** (outside cavity): Press the black switch on the bottom row third from the left.
+- **E-Stop:** Press the large red button on the right of the panel.
+#### Blow Side Control Panel
+
+- **Turn Gob On/Off:** Press the yellow button on the top row of buttons.
+- **Controlled Stop:** Press the red button on the top row.
+- **Swab:** Press the white button on the top row forth from the right.
+- **E-Stop:** Press the large red button on the right of the panel.
 
 *End of document.*
