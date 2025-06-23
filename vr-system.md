@@ -352,5 +352,25 @@ _(Use only if `section_control_panel_type` = `"Emhart Red 2"`)_
 - **Controlled Stop:** Press the red button on the top row.
 - **Swab:** Press the white button on the top row forth from the right.
 - **E-Stop:** Press the large red button on the right of the panel.
+### Bottero
+
+_(Use only if `section_control_panel_type` = `"Bottero"`)_
+#### Blank Side Control Panel
+
+- **Start Section:** Press the Blue button, positioned on the bottom left, while depressed press the button with the white outline around it towards the centre on the bottom row.
+- **Turn Gob On/Off:** Press the Blue button, positioned on the bottom left, while depressed press the button with the white outline around it towards the centre on the top row.
+- **Controlled Stop:** Press the button with the black outline around it on the bottom row.
+- **Swab:** Press the button on the bottom row third from the right, with the icon depicting a swab brush in the moulds.
+- **Reject Bottle** (inside cavity): Press the button on the bottom row sixth from the left, with the icon depicting a blow off.
+- **Reject Bottle** (outside cavity): Press the button on the bottom row seventh from the left, with the icon depicting a blow off.
+- **E-Stop:** Press the large red button on the left of the panel.
+#### Blow Side Control Panel
+
+- **Start Section:** Press the Blue button, positioned on the bottom left, while depressed press the button with the white outline around it towards the centre on the bottom row.
+- **Turn Gob On/Off:** Press the Blue button, positioned on the bottom left, while depressed press the button with the white outline around it towards the centre on the top row.
+- **Controlled Stop:** Press the button with the black outline around it on the bottom row.
+- **Reject Bottle** (inside cavity): Press the button on the bottom row sixth from the left, with the icon depicting a blow off.
+- **Reject Bottle** (outside cavity): Press the button on the bottom row seventh from the left, with the icon depicting a blow off.
+- **E-Stop:** Press the large red button on the left of the panel.
 
 *End of document.*
