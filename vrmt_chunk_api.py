@@ -17,6 +17,8 @@ openai = OpenAI(api_key=OPENAI_API_KEY)
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 INDEX_NAME = "vrmt-docs"
+NAMESPACE = "default"
+
 if INDEX_NAME not in pc.list_indexes().names():
     pc.create_index(
         name=INDEX_NAME,
@@ -25,7 +27,7 @@ if INDEX_NAME not in pc.list_indexes().names():
         spec=ServerlessSpec(cloud="aws", region="us-east-1")
     )
 
-index = pc.Index(INDEX_NAME)
+index = pc.Index(INDEX_NAME, namespace=NAMESPACE)
 
 # === STEP 1: CHUNKING BASED ON MARKDOWN HEADINGS ===
 def load_chunks(md_file):
@@ -68,7 +70,7 @@ def load_chunks(md_file):
 
 # === STEP 2: EMBED & UPSERT TO PINECONE ===
 def embed_and_upload(chunks):
-    index.delete(delete_all=True)
+    index.delete(delete_all=True, namespace=NAMESPACE)
 
     vectors = []
     for chunk in chunks:
@@ -94,15 +96,22 @@ def embed_and_upload(chunks):
         }
         vectors.append(vector)
 
-    index.upsert(vectors)
+    print(f"Uploading {len(vectors)} valid chunks to Pinecone...")
+    index.upsert(vectors=vectors, namespace=NAMESPACE)
+    print("Upload complete.")
     return len(vectors)
-
 
 # === AUTO-CHUNK ON DEPLOY ===
 try:
     md_path = "vr-system.md"
     if os.path.exists(md_path):
         chunks = load_chunks(md_path)
+
+        # Debug output for verification
+        with open("chunked_context_debug.txt", "w", encoding="utf-8") as dbg:
+            for chunk in chunks:
+                dbg.write(f"--- {chunk['title']} ---\n{chunk['text']}\n\n")
+
         print(f"Loaded {len(chunks)} structured chunks. Uploading to Pinecone...")
         count = embed_and_upload(chunks)
         print(f"Uploaded {count} chunks.")
@@ -126,5 +135,11 @@ def search():
         input=[query]
     ).data[0].embedding
 
-    results = index.query(vector=embedding, top_k=5, include_metadata=True)
+    results = index.query(
+        vector=embedding,
+        top_k=5,
+        include_metadata=True,
+        namespace=NAMESPACE
+    )
     return jsonify([match["metadata"] for match in results["matches"]])
+
