@@ -134,35 +134,17 @@ def search():
     if not query:
         return jsonify({"error": "Missing query"}), 400
 
-    # Generate embedding
     embedding = openai.embeddings.create(
         model="text-embedding-3-small",
         input=[query]
     ).data[0].embedding
 
-    # Query Pinecone
     results = index.query(
         vector=embedding,
         top_k=5,
         include_metadata=True,
         namespace=NAMESPACE
     )
-
-    # Format results into structured text
-    formatted_chunks = []
-    for match in results["matches"]:
-        meta = match.get("metadata", {})
-        title = meta.get("title", "Untitled").strip()
-        text = meta.get("text", "").strip()
-        if text:
-            formatted_chunks.append(f"--- {title} ---\n{text}")
-
-    reference_info = "\n\n".join(formatted_chunks)
-
-    # Return a clean payload with structured reference info
-    return jsonify({
-        "reference_info": reference_info,
-        "match_count": len(formatted_chunks)
-    })
+    return jsonify([match["metadata"] for match in results["matches"]])
 
 
