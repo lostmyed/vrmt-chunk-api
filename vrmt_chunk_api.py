@@ -17,6 +17,7 @@ openai = OpenAI(api_key=OPENAI_API_KEY)
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 INDEX_NAME = "vrmt-docs"
+NAMESPACE = "default"  # Explicit namespace to avoid 404 errors
 
 # === Create serverless index if it doesn't exist ===
 if INDEX_NAME not in pc.list_indexes().names():
@@ -70,7 +71,7 @@ def load_chunks(md_file):
 
 # === STEP 2: EMBED & UPSERT TO PINECONE ===
 def embed_and_upload(chunks):
-    index.delete(delete_all=True)
+    index.delete(delete_all=True, namespace=NAMESPACE)
 
     vectors = []
     for chunk in chunks:
@@ -96,7 +97,7 @@ def embed_and_upload(chunks):
         vectors.append(vector)
 
     print(f"Uploading {len(vectors)} valid chunks to Pinecone...")
-    index.upsert(vectors=vectors)
+    index.upsert(vectors=vectors, namespace=NAMESPACE)
     print("Upload complete.")
     return len(vectors)
 
@@ -137,7 +138,7 @@ def search():
     results = index.query(
         vector=embedding,
         top_k=5,
-        include_metadata=True
+        include_metadata=True,
+        namespace=NAMESPACE
     )
     return jsonify([match["metadata"] for match in results["matches"]])
-
