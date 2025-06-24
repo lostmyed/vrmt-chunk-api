@@ -142,4 +142,5 @@ def search():
         namespace=NAMESPACE
     )
     return jsonify([match["metadata"] for match in results["matches"]])
+    
 
