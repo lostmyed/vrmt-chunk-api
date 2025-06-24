@@ -17,7 +17,7 @@ openai = OpenAI(api_key=OPENAI_API_KEY)
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 INDEX_NAME = "vrmt-docs"
-NAMESPACE = "default"  # Explicit namespace to avoid 404 errors
+NAMESPACE = "default"  # Explicit namespace
 
 # === Create serverless index if it doesn't exist ===
 if INDEX_NAME not in pc.list_indexes().names():
@@ -71,6 +71,11 @@ def load_chunks(md_file):
 
 # === STEP 2: EMBED & UPSERT TO PINECONE ===
 def embed_and_upload(chunks):
+    try:
+        index.delete(delete_all=True, namespace=NAMESPACE)
+        print(f"✅ Cleared existing vectors in namespace '{NAMESPACE}'")
+    except Exception as e:
+        print(f"⚠️ Could not delete existing vectors: {e}")
 
     vectors = []
     for chunk in chunks:
@@ -97,7 +102,7 @@ def embed_and_upload(chunks):
 
     print(f"Uploading {len(vectors)} valid chunks to Pinecone...")
     index.upsert(vectors=vectors, namespace=NAMESPACE)
-    print("Upload complete.")
+    print("✅ Upload complete.")
     return len(vectors)
 
 # === AUTO-CHUNK ON DEPLOY ===
@@ -113,11 +118,11 @@ try:
 
         print(f"Loaded {len(chunks)} structured chunks. Uploading to Pinecone...")
         count = embed_and_upload(chunks)
-        print(f"Uploaded {count} chunks.")
+        print(f"✅ Uploaded {count} chunks.")
     else:
-        print(f"Markdown file '{md_path}' not found, skipping chunking.")
+        print(f"⚠️ Markdown file '{md_path}' not found, skipping chunking.")
 except Exception as e:
-    print(f"Auto-chunking failed: {e}")
+    print(f"❌ Auto-chunking failed: {e}")
 
 # === STEP 3: SEARCH ENDPOINT ===
 app = Flask(__name__)
@@ -141,3 +146,4 @@ def search():
         namespace=NAMESPACE
     )
     return jsonify([match["metadata"] for match in results["matches"]])
+
