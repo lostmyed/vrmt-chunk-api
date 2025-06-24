@@ -1,7 +1,6 @@
 import os
+import re
 from flask import Flask, request, jsonify
-from markdown import markdown
-from bs4 import BeautifulSoup
 from uuid import uuid4
 from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
@@ -28,41 +27,54 @@ if INDEX_NAME not in pc.list_indexes().names():
 
 index = pc.Index(INDEX_NAME)
 
-# === STEP 1: CHUNKING ===
+# === STEP 1: CHUNKING BASED ON MARKDOWN HEADINGS ===
 def load_chunks(md_file):
     with open(md_file, "r", encoding="utf-8") as f:
-        md_text = f.read()
-
-    html = markdown(md_text)
-    soup = BeautifulSoup(html, "html.parser")
+        lines = f.readlines()
 
     chunks = []
-    current_section = []
-    title = ""
+    current_chunk_lines = []
+    current_title = "Untitled"
+    heading_stack = []
 
-    for el in soup.find_all(["h2", "h3", "p", "ul", "ol"]):
-        if el.name in ["h2", "h3"]:
-            if current_section:
-                chunks.append({"title": title, "text": "\n".join(current_section)})
-                current_section = []
-            title = el.get_text()
+    def flush_chunk():
+        nonlocal current_chunk_lines, current_title
+        if current_chunk_lines:
+            chunks.append({
+                "title": current_title,
+                "text": "".join(current_chunk_lines).strip()
+            })
+            current_chunk_lines = []
+
+    for line in lines:
+        heading_match = re.match(r"^(#{1,6})\s+(.*)", line)
+        if heading_match:
+            flush_chunk()
+            level = len(heading_match.group(1))
+            title = heading_match.group(2).strip()
+
+            # Adjust the heading stack to current level
+            if level == 1:
+                heading_stack = [title]
+            else:
+                heading_stack = heading_stack[:level - 1] + [title]
+
+            current_title = " > ".join(heading_stack)
         else:
-            current_section.append(el.get_text())
+            current_chunk_lines.append(line)
 
-    if current_section:
-        chunks.append({"title": title, "text": "\n".join(current_section)})
-
+    flush_chunk()
     return chunks
 
-# === STEP 2: EMBED & UPSERT ===
+# === STEP 2: EMBED & UPSERT TO PINECONE ===
 def embed_and_upload(chunks):
-    # Clear all existing vectors from the index to avoid duplicates
     index.delete(delete_all=True)
 
     vectors = []
     for chunk in chunks:
         text = chunk["text"]
         title = chunk["title"]
+
         embedding = openai.embeddings.create(
             model="text-embedding-3-small",
             input=[text]
@@ -86,7 +98,7 @@ try:
     md_path = "vr-system.md"
     if os.path.exists(md_path):
         chunks = load_chunks(md_path)
-        print(f"Loaded {len(chunks)} chunks. Uploading to Pinecone...")
+        print(f"Loaded {len(chunks)} structured chunks. Uploading to Pinecone...")
         count = embed_and_upload(chunks)
         print(f"Uploaded {count} chunks.")
     else:
@@ -111,5 +123,3 @@ def search():
 
     results = index.query(vector=embedding, top_k=5, include_metadata=True)
     return jsonify([match["metadata"] for match in results["matches"]])
-
-
