@@ -72,8 +72,12 @@ def embed_and_upload(chunks):
 
     vectors = []
     for chunk in chunks:
-        text = chunk["text"]
+        text = chunk["text"].strip()
         title = chunk["title"]
+
+        # ✅ Skip empty chunks
+        if not text:
+            continue
 
         embedding = openai.embeddings.create(
             model="text-embedding-3-small",
@@ -92,6 +96,7 @@ def embed_and_upload(chunks):
 
     index.upsert(vectors)
     return len(vectors)
+
 
 # === AUTO-CHUNK ON DEPLOY ===
 try:
