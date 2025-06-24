@@ -71,7 +71,6 @@ def load_chunks(md_file):
 
 # === STEP 2: EMBED & UPSERT TO PINECONE ===
 def embed_and_upload(chunks):
-    index.delete(delete_all=True, namespace=NAMESPACE)
 
     vectors = []
     for chunk in chunks:
