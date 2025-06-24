@@ -23,8 +23,10 @@ if INDEX_NAME not in pc.list_indexes().names():
         name=INDEX_NAME,
         dimension=1536,
         metric="cosine",
-        spec=ServerlessSpec(cloud="aws", region="us-east-1")
+        spec=ServerlessSpec(cloud="aws", region="us-east-1"),
+        metadata_config={"indexed": ["title"]}  # ✅ Enables metadata filtering and avoids namespace errors
     )
+
 
 index = pc.Index(INDEX_NAME)
 
