@@ -6,19 +6,19 @@ from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv()  # Load .env if running locally
 
-# === API Keys ===
+# === Load API keys from environment ===
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 
+# === Initialize OpenAI and Pinecone clients ===
 openai = OpenAI(api_key=OPENAI_API_KEY)
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
-# === Pinecone Index Setup ===
 INDEX_NAME = "vrmt-docs"
-NAMESPACE = "default"
 
+# === Create serverless index if it doesn't exist ===
 if INDEX_NAME not in pc.list_indexes().names():
     pc.create_index(
         name=INDEX_NAME,
@@ -29,7 +29,7 @@ if INDEX_NAME not in pc.list_indexes().names():
 
 index = pc.Index(INDEX_NAME)
 
-# === Markdown Chunking by Headings ===
+# === STEP 1: CHUNKING BASED ON MARKDOWN HEADINGS ===
 def load_chunks(md_file):
     with open(md_file, "r", encoding="utf-8") as f:
         lines = f.readlines()
@@ -55,6 +55,7 @@ def load_chunks(md_file):
             level = len(heading_match.group(1))
             title = heading_match.group(2).strip()
 
+            # Adjust heading stack
             if level == 1:
                 heading_stack = [title]
             else:
@@ -67,9 +68,9 @@ def load_chunks(md_file):
     flush_chunk()
     return chunks
 
-# === Embed & Upload Chunks ===
+# === STEP 2: EMBED & UPSERT TO PINECONE ===
 def embed_and_upload(chunks):
-    index.delete(delete_all=True, namespace=NAMESPACE)
+    index.delete(delete_all=True)
 
     vectors = []
     for chunk in chunks:
@@ -84,24 +85,28 @@ def embed_and_upload(chunks):
             input=[text]
         ).data[0].embedding
 
-        vectors.append({
+        vector = {
             "id": str(uuid4()),
             "values": embedding,
             "metadata": {
                 "title": title,
                 "text": text
             }
-        })
+        }
+        vectors.append(vector)
 
-    index.upsert(vectors=vectors, namespace=NAMESPACE)
+    print(f"Uploading {len(vectors)} valid chunks to Pinecone...")
+    index.upsert(vectors=vectors)
+    print("Upload complete.")
     return len(vectors)
 
-# === Auto-Run Chunking on Deploy ===
+# === AUTO-CHUNK ON DEPLOY ===
 try:
     md_path = "vr-system.md"
     if os.path.exists(md_path):
         chunks = load_chunks(md_path)
 
+        # Debug file
         with open("chunked_context_debug.txt", "w", encoding="utf-8") as dbg:
             for chunk in chunks:
                 dbg.write(f"--- {chunk['title']} ---\n{chunk['text']}\n\n")
@@ -110,11 +115,11 @@ try:
         count = embed_and_upload(chunks)
         print(f"Uploaded {count} chunks.")
     else:
-        print(f"Markdown file '{md_path}' not found.")
+        print(f"Markdown file '{md_path}' not found, skipping chunking.")
 except Exception as e:
     print(f"Auto-chunking failed: {e}")
 
-# === Flask App & Search Endpoint ===
+# === STEP 3: SEARCH ENDPOINT ===
 app = Flask(__name__)
 
 @app.route("/search", methods=["POST"])
@@ -132,8 +137,7 @@ def search():
     results = index.query(
         vector=embedding,
         top_k=5,
-        include_metadata=True,
-        namespace=NAMESPACE
+        include_metadata=True
     )
-
     return jsonify([match["metadata"] for match in results["matches"]])
+
