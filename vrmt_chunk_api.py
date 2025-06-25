@@ -157,7 +157,7 @@ def search():
         top_k=5,
         include_metadata=True,
         namespace=NAMESPACE,
-        filter=pinecone_filter if pinecone_filter else None
+        # filter=pinecone_filter if pinecone_filter else None
     )
 
     # Format result chunks
